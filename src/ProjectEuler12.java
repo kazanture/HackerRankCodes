@@ -20,11 +20,14 @@ public class ProjectEuler12 {
         StringBuffer result=new StringBuffer();
         for (int i = 0; i < numberOfTestCases; i++) {
             int currentNumber = Integer.parseInt(bi.readLine());
-            int triangleIndex=1;
-            long triangleNumber=getNthTriangleNumber(triangleIndex++);
-            long divisorCount=getDivisorCount(triangleNumber,triangleIndex-1);
+            int largestPowerOf2=largestPowerOf2(currentNumber);
+            Long triangleStart=minimumNumbersWithMaximumDivisorCounts.get(new Long(largestPowerOf2));
+            long index=(long)Math.sqrt(2*(double)triangleStart);
+            long triangleIndex=index;
+            long triangleNumber=(long)((double)index*(double)(index+1)/2.0);
+            long divisorCount=getDivisorCount(triangleNumber,++triangleIndex-1);
             while(divisorCount<=currentNumber){
-                triangleNumber=getNthTriangleNumber(triangleIndex++);
+                triangleNumber=triangleNumber+triangleIndex++;
                 divisorCount=getDivisorCount(triangleNumber);
             }
             result.append(triangleNumber).append("\n");
@@ -34,8 +37,19 @@ public class ProjectEuler12 {
 
 
     }
-
+    static int largestPowerOf2 (long n)
+    {
+        int res = 2;
+        while (res < n) {
+            res *= 2;
+        }
+        if(res>n){
+            res=res/2;
+        }
+        return res;
+    }
     List<Long> primeNumbers = new ArrayList<>();
+    Map<Long,Long> minimumNumbersWithMaximumDivisorCounts = new HashMap<>();
 
     long getNthPrime(int n) {
         long biggestPrime = primeNumbers.get(primeNumbers.size() - 1);
@@ -77,7 +91,7 @@ public class ProjectEuler12 {
                     nClone = nClone / prime;
                     currentCount++;
                 }
-                divisorCount*=currentCount+1;
+                divisorCount*=(currentCount+1);
                 index++;
             }
             divisorCountMap.put(n,divisorCount);
@@ -116,6 +130,17 @@ public class ProjectEuler12 {
     }
 
     private void init() {
+        minimumNumbersWithMaximumDivisorCounts.put(1L,3L);
+        minimumNumbersWithMaximumDivisorCounts.put(2L,6L);
+        minimumNumbersWithMaximumDivisorCounts.put(4L,28L);
+        minimumNumbersWithMaximumDivisorCounts.put(8L,36L);
+        minimumNumbersWithMaximumDivisorCounts.put(16L,300L);
+        minimumNumbersWithMaximumDivisorCounts.put(32L,2016L);
+        minimumNumbersWithMaximumDivisorCounts.put(64L,25200L);
+        minimumNumbersWithMaximumDivisorCounts.put(128L,437580L);
+        minimumNumbersWithMaximumDivisorCounts.put(256L,2162160L);
+        minimumNumbersWithMaximumDivisorCounts.put(512L,76576500L);
+
         primeNumbers.add(2L);
         primeNumbers.add(3L);
         primeNumbers.add(5L);
